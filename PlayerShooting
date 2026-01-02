@@ -1,0 +1,56 @@
+using UnityEngine;
+
+public class PlayerShooting : MonoBehaviour
+{
+    // Prefab of the bullet / projectile to spawn when firing
+    public GameObject bulletPrefab;
+
+    // Point in the scene where bullets are created (usually the gun muzzle)
+    public Transform firePoint;
+
+    // Time (in seconds) between shots — controls fire rate
+    public float fireRate = 0.2f;
+
+    // Reference to the generated Input System class
+    GameInputs input;
+
+    // Whether the player is currently holding the fire button
+    bool firing;
+
+    // Timestamp when the player is allowed to shoot again
+    float nextFire;
+
+    void Awake()
+    {
+        // Create an instance of the input actions asset
+        input = new GameInputs();
+
+        // When the Fire button is pressed or held, enable firing
+        input.Player.Fire.performed += _ => firing = true;
+
+        // When the Fire button is released, stop firing
+        input.Player.Fire.canceled += _ => firing = false;
+    }
+
+    // Enable input when the object becomes active
+    void OnEnable() => input.Enable();
+
+    // Disable input when the object becomes inactive (prevents duplicate listeners)
+    void OnDisable() => input.Disable();
+
+    void Update()
+    {
+        // If the player isn't pressing the fire button, do nothing
+        if (!firing) return;
+
+        // Check if enough time has passed since the last shot
+        if (Time.time >= nextFire)
+        {
+            // Set the next time the player is allowed to shoot
+            nextFire = Time.time + fireRate;
+
+            // Create a new bullet at the fire point, facing its forward direction
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        }
+    }
+}
