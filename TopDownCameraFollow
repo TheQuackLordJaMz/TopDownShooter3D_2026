@@ -1,0 +1,23 @@
+using UnityEngine;
+
+public class TopDownCamera : MonoBehaviour
+{
+    // The object the camera follows (usually the player)
+    public Transform target;
+
+    // Offset from the target's position.
+    // Controls camera height + distance behind the player.
+    public Vector3 offset = new Vector3(0, 10, -6);
+
+    void LateUpdate()
+    {
+        // If there is no target assigned, exit to avoid errors
+        if (!target) return;
+
+        // Position the camera relative to the target using the offset
+        transform.position = target.position + offset;
+
+        // Rotate the camera so it always looks at the target
+        transform.LookAt(target);
+    }
+}
