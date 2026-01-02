@@ -1,0 +1,28 @@
+using UnityEngine;
+
+public class Bullet : MonoBehaviour
+{
+    // How fast the bullet travels forward (units per second)
+    public float speed = 20f;
+
+    // How long the bullet exists before destroying itself
+    // This prevents bullets from flying forever
+    public float lifetime = 2f;
+
+    // Called once when the bullet is created
+    void Start()
+    {
+        // Schedule this bullet to be destroyed after "lifetime" seconds
+        Destroy(gameObject, lifetime);
+    }
+
+    // Called every frame
+    void Update()
+    {
+        // Move the bullet forward in its local forward direction
+        // Time.deltaTime makes movement frame-rate independent
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    }
+}
+
+
